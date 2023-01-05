@@ -3,7 +3,7 @@ fn main() {
     println!("===Letra de \"A doce días de navidad\" ===");
     println!("========================================");
     const DOCE_DIAS: usize = 12;
-    
+     
     let linea_cero = "Mi amor me dio";
     let doce_dias = ["primer", "segundo", "tercer", "cuarto",
                      "quinto", "sexto", "séptimo", "octavo",

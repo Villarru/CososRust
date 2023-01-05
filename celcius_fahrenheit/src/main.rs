@@ -5,28 +5,30 @@ fn main() {
     println!("==== Convertidor de Fahrenheit a celsius y viceversa ====");
     println!("=========================================================");
  
-    let mut eleccion: u8 = 4;
+    let mut eleccion: i8 = 4;
 
-    while eleccion != 0{
-        println!("\nElije: 1. fahrenheit a celsius.  2. celsius a fahrenheit. 0.Cerrar");
+    loop{
+        println!("\nElije: 1. fahrenheit a celsius.  2. celsius a fahrenheit.");
 
         eleccion = match recibir_dato().trim().parse(){
             Ok(num) => num,
             Err(_) => continue,
         };
 
-        if validar_eleccion(eleccion) {
-            'convertir: loop{
+        eleccion = validar_eleccion(eleccion);
+        if eleccion == 3 {continue};
+ 
+        'convertir: loop{
 
-                let cantidad: f32 = match recibir_dato().trim().parse(){
-                    Ok(num) => num,
-                    Err(_) => continue,
-                };
+            let cantidad: f32 = match recibir_dato().trim().parse(){
+                Ok(num) => num,
+                Err(_) => continue,
+            };
 
-                convertir_segun_eleccion(eleccion, cantidad);
-                break 'convertir;
-            }
+            convertir_segun_eleccion(eleccion, cantidad);
+            break 'convertir;
         }
+        break;
     }
 }
 
@@ -37,26 +39,24 @@ fn recibir_dato() -> String{
     return var;
 }
 
-fn validar_eleccion(var: u8) -> bool{
+fn validar_eleccion(var: i8) -> i8{
     if var == 1 {
         println!("Introduce grados Fahrenheit: ");
-        return true;
+        return var;
     } else if var == 2 {
         println!("Introduce grados Celsius: ");
-        return true;
-    } else if var !=0{
-        println!("{} no es una opción en el menu.", var);
-        return false;
+        return var;
     } else {
-        return false;
+        println!("{} no es una opción en el menu.", var);
+        return 3;
     }
 }
 
-fn convertir_segun_eleccion(valor: u8, cantidad: f32){
+fn convertir_segun_eleccion(valor: i8, cantidad: f32){
     const UNO_PUNTO_OCHO: f32 = 1.8;
     if valor == 1 {
-        println!("El valor {} grados fahrengeit equivale a {} celsius.", cantidad, ((cantidad-32.0)/UNO_PUNTO_OCHO) );
+        println!("El valor {} grados fahrengeit equivale a {} celsius.\n", cantidad, ((cantidad-32.0)/UNO_PUNTO_OCHO) );
     } else {
-        println!("El valor {} grados celsius equivale a {} grados fahrengeit.", cantidad, (cantidad*UNO_PUNTO_OCHO + 32.0) );
+        println!("El valor {} grados celsius equivale a {} grados fahrengeit.\n", cantidad, (cantidad*UNO_PUNTO_OCHO + 32.0) );
     }
 }
