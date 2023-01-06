@@ -13,7 +13,7 @@ fn calidad (kilometraje: u32) -> (Estado,u32){
 fn fabrica_auto(num:i32, color: String, motor: Transmision, techo: bool, kilometraje: u32){
     let carro = Auto{color, motor, techo, estado: calidad(kilometraje)};
     imprimir_info(&carro,num);
-}
+} 
 
 fn imprimir_info(carro: &Auto, num: i32){
     let mut techo = String::from("");
