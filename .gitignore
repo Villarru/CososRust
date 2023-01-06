@@ -1,4 +1,9 @@
 #Autoguardados emacs
 *~ 
 \#*\#
-/target
+**/target
+**/target/
+**\#*\#
+**/\#*\#
+**/*~
+
