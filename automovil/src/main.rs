@@ -1,4 +1,4 @@
-// Usar enum, struct y fn para poder procesar información de tres automóviles nuevos.
+// Usar enum, struct y fn para poder procesar información de automoviles.
 struct Auto {color: String, motor: Transmision, techo: bool, estado: (Estado, u32),}
 #[derive(PartialEq, Debug)]
 enum Transmision{Manual, SemiAuto, Automatica,}
@@ -12,10 +12,10 @@ fn calidad (kilometraje: u32) -> (Estado,u32){
 
 fn fabrica_auto(num:i32, color: String, motor: Transmision, techo: bool, kilometraje: u32){
     let carro = Auto{color, motor, techo, estado: calidad(kilometraje)};
-    imprimir_auto(&carro,num);
+    imprimir_info(&carro,num);
 }
 
-fn imprimir_auto(carro: &Auto, num: i32){
+fn imprimir_info(carro: &Auto, num: i32){
     let mut techo = String::from("");
     if carro.techo { techo = String::from("Es convertible\n ");}
     let (estado, km): &(Estado, u32) =  &carro.estado;
