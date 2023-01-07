@@ -1,4 +1,4 @@
-# CososRust
+# Ejercicios Rust
 
 Repositorio para guardar apuntes y ejercicios pequeños en rust.
 
