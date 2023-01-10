@@ -11,4 +11,5 @@ fn main() {
     let r: f32 = r.trim().parse().expect(" error al convertir a numero ");
 
     println!("El área de un círculo con radio {} es de {}", r, (r*r)*PI);
+    println!("Y su perimetro es: {}", (2.0*r)*PI);
 }
