@@ -15,7 +15,8 @@ fn calidad (kilometraje: u32) -> (Estado,u32){
 }
 
 fn fabricar_auto(x: &u32){
-    let y: u32 = rand::thread_rng().gen_range(1,21);
+    let y: u32 = rand::thread_rng().gen_range(1,4);
+    let z: u32 = rand::thread_rng().gen_range(1,4);
     let mut color = String::from("Negro");
     let mut motor = Transmision::Manual;
     let mut kilometraje: u32 = 0;
@@ -23,24 +24,41 @@ fn fabricar_auto(x: &u32){
 
     // Condiciones aleatoreas, habrá que mejorar esto en futuras versiones
     
-    if y < 12 && y > 5 {
-        color = String::from("Blanco");
-        if x&2 ==0 { kilometraje = x+32*y;}
+    if x%y == 0 {
+        kilometraje = 0;
+        techo= false;
     }
-    if x%2 ==0 { kilometraje = 0}
-    if x%3 == 0{
+    if x%z == 0{
         color = String::from("Verde");
-        if y>8 { kilometraje = x*y*10}
+        techo= true;
+        motor = Transmision::Automatica;
+        if (x+&y)>(7-z) { kilometraje = x*y*276
+        }
     }
-    if x%4 == 0 {
+    if (y+z*x)%2 == 0 {
         color = String::from("Azul");           
         techo = false;
     }else{
         motor = Transmision::Automatica;
-        if x < &y && y%2 != 0{motor = Transmision::SemiAuto;}
-        if x > &3u32 && x%2 != 0 {
-            kilometraje = x+y*x*4;
-            techo= false;}
+        if y%2 != 0{
+            color = String::from("Verde");
+            motor = Transmision::SemiAuto;}
+        if x > &5u32 {
+            kilometraje = x+y*x*4*z;
+        }
+    }
+    if y < z {
+        techo = false;
+        if x&2 ==0 {
+            kilometraje = x+132*y;
+            color = String::from("Blanco");
+        }
+    }
+    if y > 2 && x>&z {
+        color = String::from("Negro");
+        motor = Transmision::SemiAuto;
+        if y%2 == 0 {techo = true;}
+        kilometraje = 0;
     }
     if y == 13{
         color = String::from("Turqueza");
@@ -48,7 +66,7 @@ fn fabricar_auto(x: &u32){
         kilometraje = 0;
     }
     // Fabricación del auto
-        let carro = Auto{color, motor, techo, estado: calidad(kilometraje)};
+    let carro = Auto{color, motor, techo, estado: calidad(kilometraje)};
     imprimir_info(&carro,x);
 } 
 
