@@ -25,46 +25,57 @@ fn fabricar_auto(x: &u32){
     // Condiciones aleatoreas, habrá que mejorar esto en futuras versiones
     
     if x%y == 0 {
+        color = String::from("Naranja");
         kilometraje = 0;
         techo= false;
-    }
-    if x%z == 0{
-        color = String::from("Verde");
-        techo= true;
-        motor = Transmision::Automatica;
-        if (x+&y)>(7-z) { kilometraje = x*y*276
+    }else {
+        if x%3 == 0{
+            color = String::from("Verde");
+            techo= false;
+            motor = Transmision::Automatica;
+            if (x+&y)>(8-z) {
+                kilometraje = x*y*276
+            }
         }
     }
-    if (y+z*x)%2 == 0 {
+    if y%3 == 0 {
         color = String::from("Azul");           
         techo = false;
-    }else{
         motor = Transmision::Automatica;
+    }else{
         if y%2 != 0{
+            
+            kilometraje = 0;
             color = String::from("Verde");
-            motor = Transmision::SemiAuto;}
+            motor = Transmision::SemiAuto;
+        }
         if x > &5u32 {
             kilometraje = x+y*x*4*z;
         }
     }
-    if y < z {
-        techo = false;
-        if x&2 ==0 {
-            kilometraje = x+132*y;
-            color = String::from("Blanco");
+    if x+&y > z && x%2 == 0{
+        color = String::from("Blanco");
+        if x&3 ==0 {
+            color = String::from("Negro");
+            techo = false;
+            motor = Transmision::Automatica;
         }
-    }
-    if y > 2 && x>&z {
-        color = String::from("Negro");
-        motor = Transmision::SemiAuto;
-        if y%2 == 0 {techo = true;}
-        kilometraje = 0;
+    }else {
+        if x+&z > y {
+            motor = Transmision::SemiAuto;
+            if y%2 == 0 {
+                techo = true;
+                color = String::from("Violeta");
+                kilometraje = x+132*y;
+            }
+        }
     }
     if y == 13{
         color = String::from("Turqueza");
         techo = true;
         kilometraje = 0;
     }
+    
     // Fabricación del auto
     let carro = Auto{color, motor, techo, estado: calidad(kilometraje)};
     imprimir_info(&carro,x);
@@ -89,7 +100,7 @@ fn main() {
     loop{
         cantidad += 1;
         fabricar_auto(&cantidad);
-        if cantidad >= 6 { break;}
+        if cantidad >= 8 { break;}
      }
         hr();
 }
