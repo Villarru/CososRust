@@ -1,5 +1,5 @@
 [package]
-name = "tupla_activity"
+name = "listas_enlazadas_enum"
 version = "0.1.0"
 edition = "2021"
 
