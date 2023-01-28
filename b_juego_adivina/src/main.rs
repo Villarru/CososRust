@@ -31,10 +31,10 @@ fn main() {
 	
 	//comparar entrada, luego del parse, con numero secreto.
 	match entrada.cmp(&_numero_secreto){
-	    Ordering::Less     => {println!("\n{} es más pequeño\n", entrada);
+	    Ordering::Less     => {println!("\nBuscamos un número más grande que {}\n", entrada);
 				   intentos+=1;
 	    },
-	    Ordering::Greater  => {println!("\n{} es más grande\n", entrada);
+	    Ordering::Greater  => {println!("\nBuscamos un número más chico que {}\n", entrada);
 				   intentos+=1;
 	    },
 	    Ordering::Equal    => {
