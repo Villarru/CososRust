@@ -38,7 +38,7 @@ fn main() {
 				   intentos+=1;
 	    },
 	    Ordering::Equal    => {
-		println!("\n==================================== \n ¡Le atinaste mamón! ¡Enhorabuena!");
+		println!("\n==================================== \n ¡Le atinaste! \"{}\" ¡Enhorabuena!", &_numero_secreto);
 		println!(" Te ha tomado [{}] intentos lograrlo \n====================================", intentos);
 		break;
 	    },
