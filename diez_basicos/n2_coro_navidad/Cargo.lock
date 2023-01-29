@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "coro_navidad"
+name = "n2_coro_navidad"
 version = "0.1.0"
