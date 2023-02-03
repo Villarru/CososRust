@@ -24,7 +24,7 @@ struct Player {
     speed: Vector2,
     acceleration: f32,
     rotation: f32,
-    colider: Vector3,
+    collider: Vector3,
     color: Color,
 }
 
@@ -47,7 +47,7 @@ struct Shoot {
     active: bool,
     color: Color,
 }
-
+    
 impl Default for Game {
     fn default() -> Game {
 	let game_over = false,
@@ -120,15 +120,16 @@ fn main() {
 }
 
 fn init_game(game: &mut Game, rl: &RaylibHandle){
-    let (width, height) = (rl.get_screen_width() as f32, tl.get_screen_height() as f32);
+    let (width, height) = (rl.get_screen_width() as f32, rl.get_screen_height() as f32);
     let half_width = width / 2.0;
     let half_height = height / 2.0;
 
     game.player.position = Verctor2::new(half_width, half_height - (SHIP_HEIGHT / 2f32));
     game.player.acceleration = 0f32;
-    game.player.colider = Vector3::new(game.player.position.x + game.player.rotation.to_radians().sin() * (SHIP_HEIGHT / 2.5),
-				       game.player.position.y + game.player.rotation.to_radians().cos() * (SHIP_HEIGHT / 2.5),
-				       12f32);
+    game.player.collider = Vector3::new(
+	game.player.position.x + game.player.rotation.to_radians().sin() * (SHIP_HEIGHT / 2.5),
+	game.player.position.y - game.player.rotation.to_radians().cos() * (SHIP_HEIGHT / 2.5),
+	12f32);
     game.player.color = Color::MAROON;
 
     game.destroyed_meteor_count = 0;
@@ -146,10 +147,10 @@ fn init_game(game: &mut Game, rl: &RaylibHandle){
     
     let mut correct_range = false;
 
-    for meteor in $mut game.big_meteors {
+    for meteor in &mut game.big_meteors {
 	let mut x: i32 = get_random_value(0, width as i32);
 	while !correct_range {
-	    if x > half_width as i32 - 150 && x < half_width + 150 {
+	    if x > half_width as i32 - 150 && x < half_width as i32 + 150 {
 		x = get_random_value(0, width as i32);
 	    } else {
 		correct_range = true;
@@ -159,7 +160,7 @@ fn init_game(game: &mut Game, rl: &RaylibHandle){
 
 	let mut y: i32 = get_random_value(0, height as i32);
 	while !correct_range {
-	    if x > half_height as i32 - 150 && x < half_height + 150 {
+	    if x > half_height as i32 - 150 && x < half_height as i32 + 150 {
 		x = get_random_value(0, height as i32);
 	    } else {
 		correct_range = true;
@@ -218,8 +219,8 @@ fn update_game(game: &mut Game, rl: &RaylibHandle){
 		game.player.rotation += 5f32;
 	    }
 
-	    game.player.speed.x = game.player.rotatios.to_radians().sin() * PLAYER_SPEED;
-	    game.player.speed.y = game.player.rotatios.to_radians().cos() * PLAYER_SPEED;
+	    game.player.speed.x = game.player.rotation.to_radians().sin() * PLAYER_SPEED;
+	    game.player.speed.y = game.player.rotation.to_radians().cos() * PLAYER_SPEED;
 
 	    if rl.is_key_pressed(KEY_UP) {
 		if game.player.acceleration < 1f32 {
@@ -264,9 +265,10 @@ fn update_game(game: &mut Game, rl: &RaylibHandle){
 	    
 	    if rl.is_key_pressed(KEY_SPACE){
 		for shot in &mut game.shots{
-		    if !show.active{
-			shot.position = Vector2(game.player.position.x + game.player.rotation.to_radians().sin() * SHIP_HEIGHT,
-						game.player.position.y + game.player.rotation.to_radians().cos() * SHIP_HEIGHT);
+		    if !shot.active{
+			shot.position = Vector2(
+			    game.player.position.x + game.player.rotation.to_radians().sin() * SHIP_HEIGHT,
+			    game.player.position.y - game.player.rotation.to_radians().cos() * SHIP_HEIGHT);
  			shot.active = true;
 			shot.speed.x = 1.5 * game.player.rotation.to_radians().sin() * PLAYER_SPEED;
 			shot.speed.y = 1.5 * game.player.rotation.to_radians().cos() * PLAYER_SPEED;
@@ -285,7 +287,7 @@ fn update_game(game: &mut Game, rl: &RaylibHandle){
 		    if shot.position.x > width + shot.radius{
 			shot.active = false;
 			shot.life_spawn = 0;
-		    }else shot.position.x < -shot.radius{
+		    }else if shot.position.x < -shot.radius{
 			shot.active = false;
 			shot.life_spawn = 0;
 		    }
@@ -293,7 +295,7 @@ fn update_game(game: &mut Game, rl: &RaylibHandle){
 		    if shot.position.y > height + shot.radius{
 			shot.active = false;
 			shot.life_spawn = 0;
-		    }else shot.position.y < -shot.radius{
+		    }else if shot.position.y < -shot.radius{
 			shot.active = false;
 			shot.life_spawn = 0;
 		    }
@@ -365,7 +367,7 @@ fn update_game(game: &mut Game, rl: &RaylibHandle){
 			    }
 		    }
 
-		    for meteor in %mut game.small_meteors {
+		    for meteor in &mut game.small_meteors {
 			if meteor.active &&
 			    check_collision_circles(shot.position, shot.radius, meteor.position, meteor.radius){
 				shot.active = false;
@@ -379,9 +381,10 @@ fn update_game(game: &mut Game, rl: &RaylibHandle){
 		}
 	    }
 
-	    game.player.collider = Vector3::new(game.player.position.x = game.player.rotation.to_radians().sin() * (SHIP_HEIGHT / 2.5),
-						game.player.position.y = game.player.rotation.to_radians().cos() * (SHIP_HEIGHT / 2.5),
-						12f32);
+	    game.player.collider = Vector3::new(
+		game.player.position.x + game.player.rotation.to_radians().sin() * (SHIP_HEIGHT / 2.5),
+		game.player.position.y - game.player.rotation.to_radians().cos() * (SHIP_HEIGHT / 2.5),
+		12f32);
 	    for meteor in &game.big_meteors{
 		if meteor.active && check_collision_circles(Vector2::new(game.player.collider.x, game.player.collider.y),
 							    game.player.collider.z,
@@ -475,7 +478,7 @@ fn update_game(game: &mut Game, rl: &RaylibHandle){
 }
 
 fn draw_game(game: &Game, rl: &mut RaylibHandle, thread: &RaylibHandle){
-    let (width, height) = (rl.get_screen_width() as i32, tl.get_screen_height() as i32);
+    let (width, height) = (rl.get_screen_width() as i32, rl.get_screen_height() as i32);
     let mut d = rl.begin_drawing(thread);
     
     let half_width = width / 2.0;
