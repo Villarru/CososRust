@@ -95,11 +95,12 @@ impl Default for Game {
 
 const SHIP_HEIGHT: f32 = 10.0f32 / 0.36397f32;
 const PLAYER_SPEED: f32 = 6f32;
-const MAX_BIG_METEORS: usize = 2;
-const MAX_MEDIUM_METEORS: usize = 5;
-const MAX_SMALL_METEORS: usize = 17;
+const MAX_BIG_METEORS: usize = 3;
+const MAX_MEDIUM_METEORS: usize = 6;
+const MAX_SMALL_METEORS: usize = 12;
 const METEORS_SPEED: f32 = 2f32;
 const MAX_SHOTS: usize = 12;
+const OBJETIVO: u32 = MAX_BIG_METEORS as u32 + MAX_MEDIUM_METEORS as u32 + MAX_SMALL_METEORS as u32;
 
 fn main() {
     let opt = options::Opt::from_args();
@@ -265,12 +266,9 @@ fn update_game(game: &mut Game, rl: &RaylibHandle){
 	    else if game.player.position.y < -SHIP_HEIGHT{
 		game.player.position.y = height + SHIP_HEIGHT;
 	    }
+
 	    
-	    let mut space_key: bool = false;
 	    if rl.is_key_pressed(KEY_SPACE){
-		space_key=true;
-	    }
-	    if space_key {
 		for shot in &mut game.shots{
 		    if !shot.active{
 			shot.position = Vector2::new(
@@ -283,7 +281,6 @@ fn update_game(game: &mut Game, rl: &RaylibHandle){
 			break;
 		    }
 		}
-		space_key=false;
 	    }
 
 	    for shot in &mut game.shots {
@@ -393,6 +390,7 @@ fn update_game(game: &mut Game, rl: &RaylibHandle){
 		game.player.position.x + game.player.rotation.to_radians().sin() * (SHIP_HEIGHT / 2.5),
 		game.player.position.y - game.player.rotation.to_radians().cos() * (SHIP_HEIGHT / 2.5),
 		12f32);
+
 	    for meteor in &game.big_meteors{
 		if meteor.active && check_collision_circles(Vector2::new(
 		    game.player.collider.x,
@@ -475,7 +473,7 @@ fn update_game(game: &mut Game, rl: &RaylibHandle){
 	    }	    
 	}
 
-	if game.destroyed_meteor_count == MAX_BIG_METEORS as u32 + MAX_MEDIUM_METEORS as u32 + MAX_SMALL_METEORS as u32{
+	if game.destroyed_meteor_count == OBJETIVO{
 	    game.victory = true;
 	}
 	
@@ -538,16 +536,26 @@ fn draw_game(game: &Game, rl: &mut RaylibHandle, thread: &RaylibThread){
 		d.draw_circle_v(shot.position, shot.radius, shot.color);
 	    }
 	}
+	let destruidos = game.destroyed_meteor_count.to_string();
+	let restantes = (OBJETIVO-game.destroyed_meteor_count).to_string();
 
+	let des = String::from("Destruidos: ");
+	let texto = format!("{}{}", des, destruidos);
+	let ot = String::from("Restantes: ");
+	let rest = format!("{}{}", ot, restantes);
+	
+	d.draw_text(&texto, 10, 10, 10, Color::GRAY);
+	d.draw_text(&rest, 10, 25, 10, Color::GRAY);
+	
 	if game.victory {
-	    d.draw_text("HAS GANADO", half_width - measure_text("HAS GANADO", 20), half_height, 20, Color::LIGHTGRAY);
+	    d.draw_text("HAS GANADO", half_width - (measure_text("HAS GANADO", 25)/2), half_height, 25, Color::GREEN);
  	}
 	if game.pause{
 	    d.draw_text("PAUSA", half_width - measure_text("PAUSA", 30), half_height, 30, Color::GRAY);	    
 	}    
     }
     else {
-	d.draw_text("GAME OVER", half_width - measure_text("GAME OVER", 20), half_height-10, 20, Color::GRAY);
+	d.draw_text("GAME OVER", half_width - (measure_text("GAME OVER", 20)/2), half_height-10, 20, Color::GRAY);
 	d.draw_text("Presiona ENTER para jugar de nuevo",
 		    half_width - (measure_text("Presiona ENTER para jugar de nuevo", 20)/2),
 		    half_height+15, 20, Color::GRAY);
