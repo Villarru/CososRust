@@ -207,24 +207,26 @@ fn init_game(game: &mut Game, rl: &RaylibHandle){
 
 fn update_game(game: &mut Game, rl: &RaylibHandle){
     use raylib::consts::KeyboardKey::*;
+
     if !game.game_over{
-	if rl.is_key_pressed(KEY_P){
+	if rl.is_key_down(KEY_P){
 	  game.pause = !game.pause;  
 	}
 
 	if !game.pause {
-	    if rl.is_key_pressed(KEY_LEFT){
+	    
+	    if rl.is_key_down(KEY_LEFT){
 		game.player.rotation -= 5f32;
 	    }
-	    if rl.is_key_pressed(KEY_RIGHT){
+	    if rl.is_key_down(KEY_RIGHT){
 		game.player.rotation += 5f32;
 	    }
 
 	    game.player.speed.x = game.player.rotation.to_radians().sin() * PLAYER_SPEED;
 	    game.player.speed.y = game.player.rotation.to_radians().cos() * PLAYER_SPEED;
 
-	    if rl.is_key_pressed(KEY_UP) {
-		if game.player.acceleration < 2f32 {
+	    if rl.is_key_down(KEY_UP) {
+		if game.player.acceleration < 1f32 {
 		    game.player.acceleration += 0.04;
 		}
 	    } else {
@@ -236,7 +238,7 @@ fn update_game(game: &mut Game, rl: &RaylibHandle){
 		}
 	    }
 
-	    if rl.is_key_pressed(KEY_DOWN){
+	    if rl.is_key_down(KEY_DOWN){
 		if game.player.acceleration > 0f32 {
 		    game.player.acceleration -= 0.04;
 		}
@@ -264,7 +266,11 @@ fn update_game(game: &mut Game, rl: &RaylibHandle){
 		game.player.position.y = height + SHIP_HEIGHT;
 	    }
 	    
+	    let mut space_key: bool = false;
 	    if rl.is_key_pressed(KEY_SPACE){
+		space_key=true;
+	    }
+	    if space_key {
 		for shot in &mut game.shots{
 		    if !shot.active{
 			shot.position = Vector2::new(
@@ -277,6 +283,7 @@ fn update_game(game: &mut Game, rl: &RaylibHandle){
 			break;
 		    }
 		}
+		space_key=false;
 	    }
 
 	    for shot in &mut game.shots {
@@ -542,7 +549,7 @@ fn draw_game(game: &Game, rl: &mut RaylibHandle, thread: &RaylibThread){
     else {
 	d.draw_text("GAME OVER", half_width - measure_text("GAME OVER", 20), half_height-10, 20, Color::GRAY);
 	d.draw_text("Presiona ENTER para jugar de nuevo",
-		    half_width - measure_text("Presiona ENTER para jugar de nuevo", 20),
+		    half_width - (measure_text("Presiona ENTER para jugar de nuevo", 20)/2),
 		    half_height+15, 20, Color::GRAY);
     }
     
