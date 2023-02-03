@@ -99,7 +99,7 @@ fn fabricar_auto(x: &u32) {
     imprimir_info(&carro, x);
 }
 
-fn imprimir_info(carro: &Auto, num: &u32) {
+ fn imprimir_info(carro: &Auto, num: &u32) {
     let mut techo = String::from("");
     if carro.techo {
         techo = String::from("Es convertible\n ");
